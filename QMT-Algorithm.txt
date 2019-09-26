@@ -1,0 +1,106 @@
+#include <bits/stdc++.h>
+#include <map>
+using namespace std;
+
+typedef int ll;
+
+map < string , int > token;
+map <string , int > chk;
+map <int , string > sv;
+struct claster
+{
+    string id[1000];
+    string state[100];
+    string status[100];
+    string sname[100];
+}request;
+char s_name[10][10]={"Server-1", "Server-2", "Server-3", "Server-4", "Server-5", "Server-6", "Server-7", "Server-8", "Server-9", "Server-10"};
+void ready()
+{
+    for(int i=0; i<10; i++)
+    {
+        token[s_name[i]]=0;
+    }
+}
+char find_server(char tk)
+{
+    for(int i=0; i<10; i++)
+    {
+        if(token[s_name[i]]<=10)
+        {
+            cout<<s_name[i]<<" is free now !!"<<endl;
+            return i;
+        }
+    }
+    cout<<"All server are busy now "<<endl;
+}
+void run(ll p)
+{
+    string df=request.sname[p];
+    //cout<<"For request "<<request.id[p]<<" server is "<<request.sname[p]<<endl;
+    cout<<"Chk "<<chk[request.id[p]]<<endl;
+    if(chk[request.id[p]]==0)
+    {
+        cout<<"It's a new request "<<endl;
+
+       ll fs = find_server('ts');
+
+       cout<<s_name[fs]<<" is free "<<endl;
+       string ss=s_name[fs];
+       ll kj=token[ss];
+       kj++;
+       token[ss]=kj;
+       request.sname[p]=s_name[fs];
+       cout<<"Work add in server = "<<request.sname[p]<<endl;
+       chk[request.id[p]]=p;
+       sv[p]=request.sname[p];
+       cout<<"Chk "<<chk[request.id[p]]<<endl;
+       cout<<"sv "<<sv[p]<<endl;
+    }
+    else{
+            int r = chk[request.id[p]];
+        cout<<"This id - "<<request.id[p]<<" State - "<<request.state[p]<<" is in "<<sv[r]<<endl;
+    }
+}
+int stop(ll p)
+{
+    string er = request.sname[p];
+
+    ll dk=token[er];
+    dk--;
+    if(dk<0)
+    {
+        dk=0;
+    }
+    token[er]=dk;
+
+}
+int main()
+{
+    ready();
+    ll demand, q=1;
+
+    while(1)
+    {
+        ll fs = find_server('L');
+        //cout<<fs<<" Is free now !!"<<endl;
+        cout<<"Enter the request with it's id , sate information and its working status "<<endl;
+        cin>>request.id[q]>>request.state[q]>>request.status[q];
+
+        //string fs = find_free_server();
+        string we = request.status[q];
+
+        if(we[0]=='R')
+        {
+            run(q);
+        }
+        else if(we[0]=='S')
+        {
+            stop(q);
+        }
+        //cout<<fs<<" is free now"<<endl;
+
+
+        q++;
+    }
+}
